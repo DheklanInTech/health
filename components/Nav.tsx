@@ -8,6 +8,7 @@ const links = [
   { label: "Weight Loss Trials", href: "/" },
   { label: "Alzheimer's Trials", href: "/alzheimers-trials" },
   { label: "HSV 1&2. Vaccines Trials", href: "/hsv-vaccines-trials" },
+  { label: "Flu Vaccine", href: "/flu-vaccine" },
 ];
 
 

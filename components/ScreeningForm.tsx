@@ -79,6 +79,313 @@ export const ALZHEIMERS_STEPS: StepConfig[] = [
   },
 ];
 
+export const FLU_VACCINE_STEPS: StepConfig[] = [
+  {
+    label: "Personal Info",
+    fields: [
+      { type: "email", name: "email", label: "Email", required: true },
+      { type: "tel", name: "phone", label: "Phone Number" },
+      { type: "number", name: "age", label: "Age", required: true, max: 120 },
+      { type: "radio", name: "sex", label: "Sex", options: ["Male", "Female", "Not Specified"] },
+      { type: "number", name: "weight", label: "Weight (lb)", required: true },
+      { type: "number", name: "height", label: "Height (ft)", required: true },
+    ],
+  },
+  {
+    label: "Asthma",
+    fields: [
+      {
+        type: "yesno",
+        name: "asthmaDiagnosis",
+        label: "Have you received a physician-confirmed diagnosis of asthma?",
+        required: true,
+      },
+      {
+        type: "radio",
+        name: "asthmaSeverity",
+        label: "How is your asthma currently classified?",
+        options: [
+          "Intermittent",
+          "Mild persistent",
+          "Moderate persistent",
+          "Severe persistent",
+          "Not applicable / undiagnosed",
+        ],
+        required: true,
+      },
+      {
+        type: "yesno",
+        name: "asthmaController",
+        label:
+          "Are you on daily controller therapy (inhaled corticosteroid, ICS/LABA, leukotriene receptor antagonist)?",
+        required: true,
+      },
+      {
+        type: "yesno",
+        name: "asthmaBiologic",
+        label:
+          "Do you receive a biologic agent for severe asthma (e.g. omalizumab, mepolizumab, dupilumab, benralizumab)?",
+        required: true,
+      },
+      {
+        type: "radio",
+        name: "asthmaExacerbations",
+        label:
+          "How many asthma exacerbations requiring systemic (oral or IV) corticosteroids have you had in the past 12 months?",
+        options: ["None", "1", "2 to 3", "4 or more"],
+        required: true,
+      },
+      {
+        type: "yesno",
+        name: "asthmaHospitalisation",
+        label:
+          "Have you ever been hospitalised, mechanically ventilated, or admitted to intensive care for status asthmaticus?",
+        required: true,
+      },
+      {
+        type: "yesno",
+        name: "asthmaSaba",
+        label:
+          "Do you use a short-acting beta-agonist (e.g. salbutamol/albuterol) rescue inhaler more than twice per week?",
+        required: true,
+      },
+      {
+        type: "yesno",
+        name: "asthmaAspirinSensitivity",
+        label:
+          "Do you have aspirin-exacerbated respiratory disease (NSAID-sensitive asthma), nasal polyposis, or allergic rhinitis?",
+        required: true,
+      },
+    ],
+  },
+  {
+    label: "Cardiovascular Disease",
+    fields: [
+      {
+        type: "yesno",
+        name: "cvdDiagnosis",
+        label:
+          "Have you been diagnosed with cardiovascular disease (coronary artery disease, heart failure, valvular or peripheral arterial disease)?",
+        required: true,
+      },
+      {
+        type: "yesno",
+        name: "cvdMiRevascularisation",
+        label:
+          "Have you had a myocardial infarction, percutaneous coronary intervention (stent), or coronary artery bypass graft?",
+        required: true,
+      },
+      {
+        type: "yesno",
+        name: "cvdHeartFailure",
+        label:
+          "Have you been diagnosed with congestive heart failure (reduced or preserved ejection fraction)?",
+        required: true,
+      },
+      {
+        type: "radio",
+        name: "cvdNyhaClass",
+        label: "What is your NYHA functional class?",
+        options: [
+          "Class I - no limitation of physical activity",
+          "Class II - slight limitation, symptoms on ordinary activity",
+          "Class III - marked limitation, symptoms on minimal activity",
+          "Class IV - symptoms at rest",
+          "Not applicable / undiagnosed",
+        ],
+        required: true,
+      },
+      {
+        type: "yesno",
+        name: "cvdArrhythmia",
+        label:
+          "Do you have atrial fibrillation, atrial flutter, or another clinically significant arrhythmia?",
+        required: true,
+      },
+      {
+        type: "yesno",
+        name: "cvdHypertension",
+        label:
+          "Have you been diagnosed with hypertension, and are you taking antihypertensive medication?",
+        required: true,
+      },
+      {
+        type: "yesno",
+        name: "cvdStrokeTia",
+        label: "Have you had a cerebrovascular accident (stroke) or transient ischaemic attack?",
+        required: true,
+      },
+      {
+        type: "yesno",
+        name: "cvdAnticoagulation",
+        label:
+          "Are you on anticoagulant or antiplatelet therapy (e.g. warfarin, apixaban, rivaroxaban, clopidogrel, aspirin)?",
+        required: true,
+      },
+      {
+        type: "yesno",
+        name: "cvdDevice",
+        label:
+          "Do you have an implanted cardiac device (pacemaker, implantable cardioverter-defibrillator) or a prosthetic heart valve?",
+        required: true,
+      },
+      {
+        type: "yesno",
+        name: "cvdCardiacEventRecent",
+        label:
+          "Have you experienced an acute cardiac event, decompensation, or cardiac surgery within the past 3 months?",
+        required: true,
+      },
+    ],
+  },
+  {
+    label: "COPD",
+    fields: [
+      {
+        type: "yesno",
+        name: "copdDiagnosis",
+        label:
+          "Have you been diagnosed with chronic obstructive pulmonary disease (chronic bronchitis or emphysema)?",
+        required: true,
+      },
+      {
+        type: "yesno",
+        name: "copdSpirometry",
+        label:
+          "Has spirometry confirmed persistent airflow obstruction (post-bronchodilator FEV1/FVC below 0.70)?",
+        required: true,
+      },
+      {
+        type: "radio",
+        name: "copdGoldStage",
+        label: "What is your GOLD spirometric stage (based on FEV1 percent predicted)?",
+        options: [
+          "GOLD 1 - mild (FEV1 at or above 80%)",
+          "GOLD 2 - moderate (FEV1 50-79%)",
+          "GOLD 3 - severe (FEV1 30-49%)",
+          "GOLD 4 - very severe (FEV1 below 30%)",
+          "Unknown / not applicable",
+        ],
+        required: true,
+      },
+      {
+        type: "radio",
+        name: "copdExacerbations",
+        label:
+          "How many COPD exacerbations requiring antibiotics, systemic corticosteroids, or hospitalisation have you had in the past 12 months?",
+        options: ["None", "1", "2", "3 or more"],
+        required: true,
+      },
+      {
+        type: "yesno",
+        name: "copdOxygen",
+        label:
+          "Do you use long-term supplemental oxygen or non-invasive ventilation (CPAP/BiPAP) at home?",
+        required: true,
+      },
+      {
+        type: "yesno",
+        name: "copdBronchodilators",
+        label:
+          "Are you on maintenance bronchodilator therapy (LAMA, LABA, or triple ICS/LABA/LAMA inhaler)?",
+        required: true,
+      },
+      {
+        type: "radio",
+        name: "copdSmokingStatus",
+        label: "What is your smoking status?",
+        options: ["Never smoker", "Former smoker", "Current smoker"],
+        required: true,
+      },
+      {
+        type: "radio",
+        name: "copdPackYears",
+        label: "What is your cumulative smoking exposure in pack-years?",
+        options: ["None", "Fewer than 10", "10 to 20", "21 to 40", "More than 40"],
+        required: true,
+      },
+      {
+        type: "yesno",
+        name: "copdChronicHypoxaemia",
+        label:
+          "Have you been diagnosed with chronic respiratory failure, pulmonary hypertension, or cor pulmonale?",
+        required: true,
+      },
+      {
+        type: "yesno",
+        name: "copdPneumoniaHistory",
+        label:
+          "Have you had pneumonia or a lower respiratory tract infection requiring treatment in the past 6 months?",
+        required: true,
+      },
+    ],
+  },
+  {
+    label: "Vaccine Eligibility",
+    fields: [
+      {
+        type: "yesno",
+        name: "fluPriorVaccine",
+        label: "Have you received a seasonal influenza vaccine within the past 6 months?",
+        required: true,
+      },
+      {
+        type: "yesno",
+        name: "fluAnaphylaxis",
+        label:
+          "Have you ever had a severe allergic reaction (anaphylaxis) to an influenza vaccine or any of its components?",
+        required: true,
+      },
+      {
+        type: "yesno",
+        name: "fluEggAllergy",
+        label: "Do you have a known allergy to egg protein (ovalbumin), gentamicin, or gelatin?",
+        required: true,
+      },
+      {
+        type: "yesno",
+        name: "fluGuillainBarre",
+        label:
+          "Have you ever developed Guillain-Barre syndrome within 6 weeks of receiving any vaccine?",
+        required: true,
+      },
+      {
+        type: "yesno",
+        name: "fluImmunosuppression",
+        label:
+          "Are you immunocompromised, or taking immunosuppressive therapy (systemic corticosteroids, chemotherapy, biologics, or post-transplant medication)?",
+        required: true,
+      },
+      {
+        type: "yesno",
+        name: "fluFebrileIllness",
+        label:
+          "Do you currently have a moderate to severe febrile illness (temperature at or above 100.4 F / 38 C)?",
+        required: true,
+      },
+      {
+        type: "yesno",
+        name: "fluBleedingDisorder",
+        label:
+          "Do you have thrombocytopenia or a bleeding disorder that contraindicates intramuscular injection?",
+        required: true,
+      },
+      {
+        type: "yesno",
+        name: "fluPregnancy",
+        label: "Are you currently pregnant, breastfeeding, or planning a pregnancy?",
+        required: true,
+      },
+      {
+        type: "yesno",
+        name: "fluConsent",
+        label:
+          "Do you consent to a screening review of your medical records and to attend scheduled follow-up visits?",
+        required: true,
+      },
+    ],
+  },
+];
 function buildInitialValues(steps: StepConfig[]): Record<string, string> {
   const values: Record<string, string> = {};
   for (const step of steps) {
