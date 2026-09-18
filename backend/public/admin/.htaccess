@@ -1,0 +1,29 @@
+# Extra hardening for the dashboard directory.
+
+# Search engines must never index an admin surface.
+<IfModule mod_headers.c>
+    Header always set X-Robots-Tag "noindex, nofollow, noarchive"
+    Header always set X-Frame-Options "DENY"
+    Header always set Cache-Control "no-store, private"
+</IfModule>
+
+Options -Indexes
+
+# Only these entry points are meant to be requested. Anything else that ends up
+# in this directory — a stray include, an editor backup — stays unreachable.
+<FilesMatch "\.php$">
+    Require all denied
+</FilesMatch>
+
+<FilesMatch "^(index|login|logout|submissions|submission|export|audit|users|password|messages|message|message-preview|suppressions)\.php$">
+    Require all granted
+</FilesMatch>
+
+# Optional second lock: uncomment and create .htpasswd to put HTTP Basic auth
+# in front of the whole dashboard, on top of the application login. Worth doing
+# if the dashboard is ever reachable from the open internet.
+#
+# AuthType Basic
+# AuthName "Trial Path Admin"
+# AuthUserFile /home/CPANEL_USER/.htpasswd
+# Require valid-user

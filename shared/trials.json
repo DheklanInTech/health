@@ -1,0 +1,169 @@
+{
+  "$comment": "Single source of truth for every screening question on the site. The React form (lib/trials.ts) and the PHP validator (backend/src/Trials.php) both read this file, so the two can never drift. Add a trial here and it appears in the form, the API validator, the dashboard filters and the CSV export.",
+  "trials": {
+    "weight-loss": {
+      "name": "Weight Loss Trials",
+      "path": "/",
+      "idPrefix": "WL",
+      "steps": [
+        {
+          "label": "Personal Info",
+          "fields": [
+            { "type": "email", "name": "email", "label": "Email", "required": true },
+            { "type": "tel", "name": "phone", "label": "Phone Number" },
+            { "type": "number", "name": "age", "label": "Age", "required": true, "max": 120 },
+            { "type": "radio", "name": "sex", "label": "Sex", "options": ["Male", "Female", "Not Specified"] }
+          ]
+        },
+        {
+          "label": "Health Metrics",
+          "fields": [
+            { "type": "number", "name": "weight", "label": "Weight (lb)", "required": true },
+            { "type": "number", "name": "height", "label": "Height (ft)", "required": true }
+          ]
+        },
+        {
+          "label": "Medical History",
+          "fields": [
+            { "type": "yesno", "name": "pancreatitis", "label": "History of Pancreatitis?", "required": true },
+            { "type": "yesno", "name": "gallbladder", "label": "History of Gall Bladder Stone?", "required": true },
+            { "type": "yesno", "name": "hypertensive", "label": "Are You Hypertensive?", "required": true },
+            { "type": "yesno", "name": "diabetic", "label": "Are You Diabetic?", "required": true }
+          ]
+        },
+        {
+          "label": "Mental Health",
+          "fields": [
+            { "type": "yesno", "name": "mentalillness", "label": "Any History of Mental Illness?", "required": true },
+            { "type": "yesno", "name": "mdd", "label": "Do You Have Major Depressive Disorder?", "required": true },
+            { "type": "yesno", "name": "bipolar", "label": "Do You Have a Bipolar Disorder?", "required": true },
+            { "type": "yesno", "name": "schizophrenic", "label": "Are You Schizophrenic?", "required": true },
+            { "type": "yesno", "name": "anxiety", "label": "Do You Suffer From Serious Anxiety?", "required": true },
+            { "type": "yesno", "name": "adhd", "label": "Do You Suffer From Attention Hypersensitivity Disorder?", "required": true }
+          ]
+        }
+      ]
+    },
+    "alzheimers": {
+      "name": "Alzheimer's Trials",
+      "path": "/alzheimers-trials",
+      "idPrefix": "AZ",
+      "steps": [
+        {
+          "label": "Personal Info",
+          "fields": [
+            { "type": "email", "name": "email", "label": "Email", "required": true },
+            { "type": "tel", "name": "phone", "label": "Phone Number" },
+            { "type": "number", "name": "age", "label": "Age", "required": true, "max": 120 },
+            { "type": "radio", "name": "sex", "label": "Sex", "options": ["Male", "Female"] }
+          ]
+        },
+        {
+          "label": "Health & Eligibility",
+          "fields": [
+            { "type": "number", "name": "weight", "label": "Weight (lb)", "required": true },
+            { "type": "number", "name": "height", "label": "Height (ft)", "required": true },
+            { "type": "yesno", "name": "over65", "label": "Are You 65 years or Older?", "required": true },
+            { "type": "yesno", "name": "dementia", "label": "Any History of Dementia?", "required": true }
+          ]
+        }
+      ]
+    },
+    "hsv": {
+      "name": "HSV 1&2 Vaccines Trials",
+      "path": "/hsv-vaccines-trials",
+      "idPrefix": "HV",
+      "steps": [
+        {
+          "label": "Personal Info",
+          "fields": [
+            { "type": "email", "name": "email", "label": "Email", "required": true },
+            { "type": "tel", "name": "phone", "label": "Phone Number" },
+            { "type": "number", "name": "age", "label": "Age", "required": true, "max": 120 },
+            { "type": "radio", "name": "sex", "label": "Sex", "options": ["Male", "Female", "Not Specified"] }
+          ]
+        },
+        {
+          "label": "Health Metrics",
+          "fields": [
+            { "type": "number", "name": "weight", "label": "Weight (lb)", "required": true },
+            { "type": "number", "name": "height", "label": "Height (ft)", "required": true }
+          ]
+        },
+        {
+          "label": "HSV History",
+          "fields": [
+            {
+              "type": "radio",
+              "name": "hsvstatus",
+              "label": "Have You Been Diagnosed With HSV?",
+              "required": true,
+              "options": ["No / Unknown", "HSV-1 Only", "HSV-2 Only", "Both HSV-1 and HSV-2"]
+            },
+            { "type": "yesno", "name": "outbreaks", "label": "Have You Had a Recurrent Outbreak in the Past 12 Months?", "required": true },
+            { "type": "yesno", "name": "antiviral", "label": "Are You Currently on Suppressive Antiviral Therapy (e.g. Valacyclovir)?", "required": true }
+          ]
+        },
+        {
+          "label": "Vaccine Eligibility",
+          "fields": [
+            { "type": "yesno", "name": "immunosuppressed", "label": "Are You Immunocompromised or on Immunosuppressive Therapy?", "required": true },
+            { "type": "yesno", "name": "priortrial", "label": "Have You Taken Part in Another Vaccine Trial in the Past 6 Months?", "required": true },
+            { "type": "yesno", "name": "pregnant", "label": "Are You Pregnant, Breastfeeding, or Planning Pregnancy During the Study?", "required": true }
+          ]
+        }
+      ]
+    },
+    "flu": {
+      "name": "Flu Vaccine",
+      "path": "/flu-vaccine",
+      "idPrefix": "FV",
+      "steps": [
+        {
+          "label": "Personal Info",
+          "fields": [
+            { "type": "email", "name": "email", "label": "Email", "required": true },
+            { "type": "tel", "name": "phone", "label": "Phone Number" },
+            { "type": "number", "name": "age", "label": "Age", "required": true, "max": 120 },
+            { "type": "radio", "name": "sex", "label": "Sex", "options": ["Male", "Female", "Not Specified"] }
+          ]
+        },
+        {
+          "label": "Health Metrics",
+          "fields": [
+            { "type": "number", "name": "weight", "label": "Weight (lb)", "required": true },
+            { "type": "number", "name": "height", "label": "Height (ft)", "required": true }
+          ]
+        },
+        {
+          "label": "Medical History",
+          "fields": [
+            { "type": "yesno", "name": "asthma", "label": "Have You Been Diagnosed With Asthma?", "required": true },
+            { "type": "yesno", "name": "exacerbation", "label": "Any Exacerbation Requiring Systemic Corticosteroids in the Past 12 Months?", "required": true },
+            { "type": "yesno", "name": "copd", "label": "Have You Been Diagnosed With COPD (Chronic Bronchitis or Emphysema)?", "required": true },
+            { "type": "yesno", "name": "oxygentherapy", "label": "Do You Use Long-Term Supplemental Oxygen Therapy?", "required": true },
+            {
+              "type": "radio",
+              "name": "smoking",
+              "label": "Smoking Status",
+              "required": true,
+              "options": ["Never Smoker", "Former Smoker", "Current Smoker"]
+            },
+            { "type": "yesno", "name": "cardiovascular", "label": "Have You Been Diagnosed With Cardiovascular Disease?", "required": true },
+            { "type": "yesno", "name": "infarction", "label": "Any History of Myocardial Infarction or Coronary Revascularisation?", "required": true },
+            { "type": "yesno", "name": "heartfailure", "label": "Do You Have Congestive Heart Failure?", "required": true }
+          ]
+        },
+        {
+          "label": "Vaccine Eligibility",
+          "fields": [
+            { "type": "yesno", "name": "priorvaccine", "label": "Have You Received a Seasonal Influenza Vaccine in the Past 6 Months?", "required": true },
+            { "type": "yesno", "name": "anaphylaxis", "label": "Any Anaphylaxis to an Influenza Vaccine, Egg Protein, or Vaccine Component?", "required": true },
+            { "type": "yesno", "name": "guillainbarre", "label": "Any History of Guillain-Barre Syndrome Following Vaccination?", "required": true },
+            { "type": "yesno", "name": "immunosuppressed", "label": "Are You Immunocompromised or on Immunosuppressive Therapy?", "required": true }
+          ]
+        }
+      ]
+    }
+  }
+}

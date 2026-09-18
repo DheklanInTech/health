@@ -1,7 +1,7 @@
 import Nav from "@/components/Nav";
 import Hero from "@/components/Hero";
 import Gallery, { type GallerySlide } from "@/components/Gallery";
-import ScreeningForm, { ALZHEIMERS_STEPS } from "@/components/ScreeningForm";
+import ScreeningForm from "@/components/ScreeningForm";
 import Footer from "@/components/Footer";
 
 const slides: GallerySlide[] = [
@@ -35,7 +35,7 @@ export default function AlzheimersTrialsPage() {
 
         <hr className="border-t-2 border-divider mb-12" />
 
-        <ScreeningForm steps={ALZHEIMERS_STEPS} />
+        <ScreeningForm trial="alzheimers" />
       </main>
 
       <Footer />
