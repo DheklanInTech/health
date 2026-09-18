@@ -1,391 +1,24 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useFormik, type FormikErrors, type FormikTouched } from "formik";
+import {
+  getSteps,
+  type FieldConfig,
+  type StepConfig,
+} from "@/lib/trials";
 
-export type FieldConfig =
-  | { type: "email" | "tel" | "number"; name: string; label: string; required?: boolean; max?: number }
-  | { type: "radio"; name: string; label: string; required?: boolean; options: string[] }
-  | { type: "yesno"; name: string; label: string; required?: boolean };
+// Re-exported so existing imports keep working; the definitions now live in
+// shared/trials.json, which the PHP backend reads too.
+export type { FieldConfig, StepConfig };
 
-export type StepConfig = { label: string; fields: FieldConfig[] };
+/** Where the PHP backend is mounted. Same origin, so a relative path. */
+const SUBMIT_ENDPOINT = "/api/submit.php";
 
 function fieldValueKeys(field: FieldConfig): string[] {
-  return  [field.name];
+  return [field.name];
 }
 
-const WEIGHT_LOSS_STEPS: StepConfig[] = [
-  {
-    label: "Personal Info",
-    fields: [
-      { type: "email", name: "email", label: "Email", required: true },
-      { type: "tel", name: "phone", label: "Phone Number" },
-      { type: "number", name: "age", label: "Age", required: true, max: 120 },
-      { type: "radio", name: "sex", label: "Sex", options: ["Male", "Female", "Not Specified"] },
-    ],
-  },
-  {
-    label: "Health Metrics",
-    fields: [
-      { type: "number", name: "weight", label: "Weight (lb)", required: true },
-      { type: "number", name: "height", label: "Height (ft)", required: true },
-    ],
-  },
-  {
-    label: "Medical History",
-    fields: [
-      { type: "yesno", name: "pancreatitis", label: "History of Pancreatitis?", required: true },
-      { type: "yesno", name: "gallbladder", label: "History of Gall Bladder Stone?", required: true },
-      { type: "yesno", name: "hypertensive", label: "Are You Hypertensive?", required: true },
-      { type: "yesno", name: "diabetic", label: "Are You Diabetic?", required: true },
-    ],
-  },
-  {
-    label: "Mental Health",
-    fields: [
-      { type: "yesno", name: "mentalillness", label: "Any History of Mental Illness?", required: true },
-      { type: "yesno", name: "mdd", label: "Do You Have Major Depressive Disorder?", required: true },
-      { type: "yesno", name: "bipolar", label: "Do You Have a Bipolar Disorder?", required: true },
-      { type: "yesno", name: "schizophrenic", label: "Are You Schizophrenic?", required: true },
-      { type: "yesno", name: "anxiety", label: "Do You Suffer From Serious Anxiety?", required: true },
-      {
-        type: "yesno",
-        name: "adhd",
-        label: "Do You Suffer From Attention Hypersensitivity Disorder?",
-        required: true,
-      },
-    ],
-  },
-];
-
-export const ALZHEIMERS_STEPS: StepConfig[] = [
-  {
-    label: "Personal Info",
-    fields: [
-      { type: "email", name: "email", label: "Email", required: true },
-      { type: "tel", name: "phone", label: "Phone Number" },
-      { type: "number", name: "age", label: "Age", required: true, max: 120 },
-      { type: "radio", name: "sex", label: "Sex", options: ["Male", "Female"] },
-    ],
-  },
-  {
-    label: "Health & Eligibility",
-    fields: [
-      { type: "number", name: "weight", label: "Weight (lb)", required: true },
-      { type: "number", name: "height", label: "Height (ft)", required: true },
-      { type: "yesno", name: "over65", label: "Are You 65 years or Older?", required: true },
-      { type: "yesno", name: "dementia", label: "Any History of Dementia?", required: true },
-    ],
-  },
-];
-
-export const FLU_VACCINE_STEPS: StepConfig[] = [
-  {
-    label: "Personal Info",
-    fields: [
-      { type: "email", name: "email", label: "Email", required: true },
-      { type: "tel", name: "phone", label: "Phone Number" },
-      { type: "number", name: "age", label: "Age", required: true, max: 120 },
-      { type: "radio", name: "sex", label: "Sex", options: ["Male", "Female", "Not Specified"] },
-      { type: "number", name: "weight", label: "Weight (lb)", required: true },
-      { type: "number", name: "height", label: "Height (ft)", required: true },
-    ],
-  },
-  {
-    label: "Asthma",
-    fields: [
-      {
-        type: "yesno",
-        name: "asthmaDiagnosis",
-        label: "Have you received a physician-confirmed diagnosis of asthma?",
-        required: true,
-      },
-      {
-        type: "radio",
-        name: "asthmaSeverity",
-        label: "How is your asthma currently classified?",
-        options: [
-          "Intermittent",
-          "Mild persistent",
-          "Moderate persistent",
-          "Severe persistent",
-          "Not applicable / undiagnosed",
-        ],
-        required: true,
-      },
-      {
-        type: "yesno",
-        name: "asthmaController",
-        label:
-          "Are you on daily controller therapy (inhaled corticosteroid, ICS/LABA, leukotriene receptor antagonist)?",
-        required: true,
-      },
-      {
-        type: "yesno",
-        name: "asthmaBiologic",
-        label:
-          "Do you receive a biologic agent for severe asthma (e.g. omalizumab, mepolizumab, dupilumab, benralizumab)?",
-        required: true,
-      },
-      {
-        type: "radio",
-        name: "asthmaExacerbations",
-        label:
-          "How many asthma exacerbations requiring systemic (oral or IV) corticosteroids have you had in the past 12 months?",
-        options: ["None", "1", "2 to 3", "4 or more"],
-        required: true,
-      },
-      {
-        type: "yesno",
-        name: "asthmaHospitalisation",
-        label:
-          "Have you ever been hospitalised, mechanically ventilated, or admitted to intensive care for status asthmaticus?",
-        required: true,
-      },
-      {
-        type: "yesno",
-        name: "asthmaSaba",
-        label:
-          "Do you use a short-acting beta-agonist (e.g. salbutamol/albuterol) rescue inhaler more than twice per week?",
-        required: true,
-      },
-      {
-        type: "yesno",
-        name: "asthmaAspirinSensitivity",
-        label:
-          "Do you have aspirin-exacerbated respiratory disease (NSAID-sensitive asthma), nasal polyposis, or allergic rhinitis?",
-        required: true,
-      },
-    ],
-  },
-  {
-    label: "Cardiovascular Disease",
-    fields: [
-      {
-        type: "yesno",
-        name: "cvdDiagnosis",
-        label:
-          "Have you been diagnosed with cardiovascular disease (coronary artery disease, heart failure, valvular or peripheral arterial disease)?",
-        required: true,
-      },
-      {
-        type: "yesno",
-        name: "cvdMiRevascularisation",
-        label:
-          "Have you had a myocardial infarction, percutaneous coronary intervention (stent), or coronary artery bypass graft?",
-        required: true,
-      },
-      {
-        type: "yesno",
-        name: "cvdHeartFailure",
-        label:
-          "Have you been diagnosed with congestive heart failure (reduced or preserved ejection fraction)?",
-        required: true,
-      },
-      {
-        type: "radio",
-        name: "cvdNyhaClass",
-        label: "What is your NYHA functional class?",
-        options: [
-          "Class I - no limitation of physical activity",
-          "Class II - slight limitation, symptoms on ordinary activity",
-          "Class III - marked limitation, symptoms on minimal activity",
-          "Class IV - symptoms at rest",
-          "Not applicable / undiagnosed",
-        ],
-        required: true,
-      },
-      {
-        type: "yesno",
-        name: "cvdArrhythmia",
-        label:
-          "Do you have atrial fibrillation, atrial flutter, or another clinically significant arrhythmia?",
-        required: true,
-      },
-      {
-        type: "yesno",
-        name: "cvdHypertension",
-        label:
-          "Have you been diagnosed with hypertension, and are you taking antihypertensive medication?",
-        required: true,
-      },
-      {
-        type: "yesno",
-        name: "cvdStrokeTia",
-        label: "Have you had a cerebrovascular accident (stroke) or transient ischaemic attack?",
-        required: true,
-      },
-      {
-        type: "yesno",
-        name: "cvdAnticoagulation",
-        label:
-          "Are you on anticoagulant or antiplatelet therapy (e.g. warfarin, apixaban, rivaroxaban, clopidogrel, aspirin)?",
-        required: true,
-      },
-      {
-        type: "yesno",
-        name: "cvdDevice",
-        label:
-          "Do you have an implanted cardiac device (pacemaker, implantable cardioverter-defibrillator) or a prosthetic heart valve?",
-        required: true,
-      },
-      {
-        type: "yesno",
-        name: "cvdCardiacEventRecent",
-        label:
-          "Have you experienced an acute cardiac event, decompensation, or cardiac surgery within the past 3 months?",
-        required: true,
-      },
-    ],
-  },
-  {
-    label: "COPD",
-    fields: [
-      {
-        type: "yesno",
-        name: "copdDiagnosis",
-        label:
-          "Have you been diagnosed with chronic obstructive pulmonary disease (chronic bronchitis or emphysema)?",
-        required: true,
-      },
-      {
-        type: "yesno",
-        name: "copdSpirometry",
-        label:
-          "Has spirometry confirmed persistent airflow obstruction (post-bronchodilator FEV1/FVC below 0.70)?",
-        required: true,
-      },
-      {
-        type: "radio",
-        name: "copdGoldStage",
-        label: "What is your GOLD spirometric stage (based on FEV1 percent predicted)?",
-        options: [
-          "GOLD 1 - mild (FEV1 at or above 80%)",
-          "GOLD 2 - moderate (FEV1 50-79%)",
-          "GOLD 3 - severe (FEV1 30-49%)",
-          "GOLD 4 - very severe (FEV1 below 30%)",
-          "Unknown / not applicable",
-        ],
-        required: true,
-      },
-      {
-        type: "radio",
-        name: "copdExacerbations",
-        label:
-          "How many COPD exacerbations requiring antibiotics, systemic corticosteroids, or hospitalisation have you had in the past 12 months?",
-        options: ["None", "1", "2", "3 or more"],
-        required: true,
-      },
-      {
-        type: "yesno",
-        name: "copdOxygen",
-        label:
-          "Do you use long-term supplemental oxygen or non-invasive ventilation (CPAP/BiPAP) at home?",
-        required: true,
-      },
-      {
-        type: "yesno",
-        name: "copdBronchodilators",
-        label:
-          "Are you on maintenance bronchodilator therapy (LAMA, LABA, or triple ICS/LABA/LAMA inhaler)?",
-        required: true,
-      },
-      {
-        type: "radio",
-        name: "copdSmokingStatus",
-        label: "What is your smoking status?",
-        options: ["Never smoker", "Former smoker", "Current smoker"],
-        required: true,
-      },
-      {
-        type: "radio",
-        name: "copdPackYears",
-        label: "What is your cumulative smoking exposure in pack-years?",
-        options: ["None", "Fewer than 10", "10 to 20", "21 to 40", "More than 40"],
-        required: true,
-      },
-      {
-        type: "yesno",
-        name: "copdChronicHypoxaemia",
-        label:
-          "Have you been diagnosed with chronic respiratory failure, pulmonary hypertension, or cor pulmonale?",
-        required: true,
-      },
-      {
-        type: "yesno",
-        name: "copdPneumoniaHistory",
-        label:
-          "Have you had pneumonia or a lower respiratory tract infection requiring treatment in the past 6 months?",
-        required: true,
-      },
-    ],
-  },
-  {
-    label: "Vaccine Eligibility",
-    fields: [
-      {
-        type: "yesno",
-        name: "fluPriorVaccine",
-        label: "Have you received a seasonal influenza vaccine within the past 6 months?",
-        required: true,
-      },
-      {
-        type: "yesno",
-        name: "fluAnaphylaxis",
-        label:
-          "Have you ever had a severe allergic reaction (anaphylaxis) to an influenza vaccine or any of its components?",
-        required: true,
-      },
-      {
-        type: "yesno",
-        name: "fluEggAllergy",
-        label: "Do you have a known allergy to egg protein (ovalbumin), gentamicin, or gelatin?",
-        required: true,
-      },
-      {
-        type: "yesno",
-        name: "fluGuillainBarre",
-        label:
-          "Have you ever developed Guillain-Barre syndrome within 6 weeks of receiving any vaccine?",
-        required: true,
-      },
-      {
-        type: "yesno",
-        name: "fluImmunosuppression",
-        label:
-          "Are you immunocompromised, or taking immunosuppressive therapy (systemic corticosteroids, chemotherapy, biologics, or post-transplant medication)?",
-        required: true,
-      },
-      {
-        type: "yesno",
-        name: "fluFebrileIllness",
-        label:
-          "Do you currently have a moderate to severe febrile illness (temperature at or above 100.4 F / 38 C)?",
-        required: true,
-      },
-      {
-        type: "yesno",
-        name: "fluBleedingDisorder",
-        label:
-          "Do you have thrombocytopenia or a bleeding disorder that contraindicates intramuscular injection?",
-        required: true,
-      },
-      {
-        type: "yesno",
-        name: "fluPregnancy",
-        label: "Are you currently pregnant, breastfeeding, or planning a pregnancy?",
-        required: true,
-      },
-      {
-        type: "yesno",
-        name: "fluConsent",
-        label:
-          "Do you consent to a screening review of your medical records and to attend scheduled follow-up visits?",
-        required: true,
-      },
-    ],
-  },
-];
 function buildInitialValues(steps: StepConfig[]): Record<string, string> {
   const values: Record<string, string> = {};
   for (const step of steps) {
@@ -430,16 +63,6 @@ function allTouched(initialValues: Record<string, string>): FormikTouched<Record
   return touched as FormikTouched<Record<string, string>>;
 }
 
-const ID_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-
-function generateApplicationId() {
-  let code = "";
-  for (let i = 0; i < 8; i++) {
-    code += ID_CHARS[Math.floor(Math.random() * ID_CHARS.length)];
-  }
-  return `RH-${code}`;
-}
-
 function Field({ children }: { children: React.ReactNode }) {
   return <div className="flex flex-col gap-2">{children}</div>;
 }
@@ -462,7 +85,8 @@ function TextInput(props: React.InputHTMLAttributes<HTMLInputElement> & { hasErr
   return (
     <input
       {...rest}
-      className={`w-full box-border border  bg-white px-3 py-2.5 focus:outline-2 focus:outline-accent focus:outline-offset-2 ${className ?? ""}`}
+      aria-invalid={hasError || undefined}
+      className={`w-full box-border border bg-white px-3 py-2.5 focus:outline-2 focus:outline-accent focus:outline-offset-2 ${className ?? ""}`}
     />
   );
 }
@@ -517,7 +141,10 @@ function SuccessModal({ applicationId, onClose }: { applicationId: string; onClo
         </h3>
         <p className="text-ink2-700 mb-6">Thank you. Your application has been received</p>
         <div className="text-xs tracking-widest text-ink2-700 mb-1">YOUR UNIQUE ID</div>
-        <div className="font-heading font-extrabold text-xl tracking-widest mb-8">{applicationId}</div>
+        <div className="font-heading font-extrabold text-xl tracking-widest mb-2">{applicationId}</div>
+        <p className="text-xs text-ink2-700 mb-8">
+          Keep this reference — quote it if you contact us about your application.
+        </p>
         <button
           type="button"
           onClick={onClose}
@@ -531,24 +158,80 @@ function SuccessModal({ applicationId, onClose }: { applicationId: string; onClo
 }
 
 type ScreeningFormProps = {
+  /** Trial slug from shared/trials.json — decides the questions and the reference prefix. */
+  trial?: string;
+  /** Explicit step override. Rarely needed; `trial` is the normal way in. */
   steps?: StepConfig[];
   title?: string;
 };
 
-export default function ScreeningForm({ steps = WEIGHT_LOSS_STEPS, title = "Application" }: ScreeningFormProps) {
+export default function ScreeningForm({
+  trial = "weight-loss",
+  steps: stepsOverride,
+  title = "Application",
+}: ScreeningFormProps) {
+  const steps = stepsOverride ?? getSteps(trial);
+
   const [applicationId, setApplicationId] = useState<string | null>(null);
+  const [submitError, setSubmitError] = useState<string | null>(null);
+
+  // Bots fill forms instantly; a real multi-step questionnaire does not. The
+  // backend rejects anything completed in under three seconds.
+  const startedAt = useRef<number>(Date.now());
+  // Hidden field a person never sees. Anything in it means a bot.
+  const honeypot = useRef<string>("");
+
   const initialValues = buildInitialValues(steps);
 
   const formik = useFormik<Record<string, string>>({
     initialValues,
     validate: (values) => validateSteps(steps, values),
-    onSubmit: (values) => {
-      console.log("Screening application submitted", values);
-      setApplicationId(generateApplicationId());
+    onSubmit: async (values, helpers) => {
+      setSubmitError(null);
+      try {
+        const response = await fetch(SUBMIT_ENDPOINT, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            trial,
+            answers: values,
+            website: honeypot.current,
+            elapsedMs: Date.now() - startedAt.current,
+          }),
+        });
+
+        const data = await response.json().catch(() => null);
+
+        if (response.ok && data?.ok) {
+          setApplicationId(String(data.applicationId));
+          return;
+        }
+
+        // The server re-validates everything; surface its field errors so the
+        // visitor sees them on the right questions.
+        if (data?.fields && typeof data.fields === "object") {
+          helpers.setErrors(data.fields as FormikErrors<Record<string, string>>);
+          helpers.setTouched(allTouched(initialValues));
+          const firstBadStep = steps.findIndex((s) =>
+            s.fields.flatMap(fieldValueKeys).some((k) => (data.fields as Record<string, string>)[k])
+          );
+          if (firstBadStep !== -1) setStep(firstBadStep);
+        }
+
+        setSubmitError(
+          typeof data?.error === "string"
+            ? data.error
+            : "We could not submit your application. Please try again."
+        );
+      } catch {
+        setSubmitError(
+          "We could not reach the server. Check your connection and try again."
+        );
+      }
     },
   });
 
-  const { values, errors, touched, handleChange, handleBlur, setFieldValue, setTouched } = formik;
+  const { values, errors, touched, handleChange, handleBlur, setFieldValue, setTouched, isSubmitting } = formik;
 
   const [step, setStep] = useState(0);
   const isMultiStep = steps.length > 1;
@@ -556,8 +239,11 @@ export default function ScreeningForm({ steps = WEIGHT_LOSS_STEPS, title = "Appl
 
   const closeSuccessModal = () => {
     setApplicationId(null);
+    setSubmitError(null);
     formik.resetForm();
     setStep(0);
+    startedAt.current = Date.now();
+    honeypot.current = "";
   };
 
   const touchStepFields = (i: number) => {
@@ -688,12 +374,38 @@ export default function ScreeningForm({ steps = WEIGHT_LOSS_STEPS, title = "Appl
       <form onSubmit={handleFormSubmit} noValidate>
         <div className="flex flex-col gap-8 max-w-xl">{steps[step].fields.map(renderField)}</div>
 
+        {/* Honeypot. Off-screen rather than display:none — some bots skip
+            hidden fields but fill positioned ones. */}
+        <div aria-hidden="true" className="absolute left-[-9999px] top-auto w-px h-px overflow-hidden">
+          <label htmlFor="website">Leave this field empty</label>
+          <input
+            type="text"
+            id="website"
+            name="website"
+            tabIndex={-1}
+            autoComplete="off"
+            onChange={(e) => {
+              honeypot.current = e.target.value;
+            }}
+          />
+        </div>
+
+        {submitError && (
+          <div
+            role="alert"
+            className="mt-8 max-w-xl border-l-4 border-red-500 bg-red-50 px-4 py-3 text-sm text-red-700"
+          >
+            {submitError}
+          </div>
+        )}
+
         <div className="flex gap-4 mt-12">
           {step > 0 && (
             <button
               type="button"
               onClick={goBack}
-              className="border-2 border-ink text-ink font-heading font-extrabold text-sm px-5 py-2.5 hover:bg-ink2-200"
+              disabled={isSubmitting}
+              className="border-2 border-ink text-ink font-heading font-extrabold text-sm px-5 py-2.5 hover:bg-ink2-200 disabled:opacity-50"
             >
               Back
             </button>
@@ -710,9 +422,10 @@ export default function ScreeningForm({ steps = WEIGHT_LOSS_STEPS, title = "Appl
           {step === steps.length - 1 && (
             <button
               type="submit"
-              className="bg-accent text-white font-heading font-extrabold text-sm px-5 py-2.5 hover:bg-accent-600 active:bg-accent-700"
+              disabled={isSubmitting}
+              className="bg-accent text-white font-heading font-extrabold text-sm px-5 py-2.5 hover:bg-accent-600 active:bg-accent-700 disabled:opacity-60 disabled:cursor-not-allowed"
             >
-              Submit
+              {isSubmitting ? "Submitting…" : "Submit"}
             </button>
           )}
         </div>

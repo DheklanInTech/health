@@ -10,14 +10,14 @@ export default function Footer() {
         <div>
           <div className="flex items-center gap-3 mb-6">
             <div className="w-9 h-9 bg-bg flex items-center justify-center">
-              <span className="text-ink font-heading font-extrabold text-lg">RH</span>
+              <span className="text-ink font-heading font-extrabold text-lg">TP</span>
             </div>
             <div className="font-heading font-extrabold text-[15px]">
-              REVIVING HUMANITY FOUNDATION
+              TRIAL PATH
             </div>
           </div>
           <p className="text-[15px] leading-relaxed text-ink2-300 max-w-md">
-            The Reviving Humanity Foundation is a non-governmental organization (NGO)
+            Trial Path is a non-governmental organization (NGO)
             dedicated to creating positive and sustainable change in communities worldwide.
           </p>
         </div>
@@ -59,7 +59,7 @@ export default function Footer() {
           <span>Terms of use</span>
           <span>Privacy Environmental Policy</span>
         </div>
-        <div>Copyright © 2023 Reviving Humanity Foundation. All Rights Reserved.</div>
+        <div>Copyright © 2023 Trial Path. All Rights Reserved.</div>
       </div>
     </footer>
   );

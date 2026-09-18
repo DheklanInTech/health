@@ -28,7 +28,7 @@ export default function WeightLossTrialsPage() {
 
         <hr className="border-t-2 border-divider mb-12" />
 
-        <ScreeningForm />
+        <ScreeningForm trial="weight-loss" />
       </main>
 
       <Footer />

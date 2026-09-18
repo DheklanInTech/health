@@ -42,13 +42,13 @@ export default function Nav() {
       <nav className="flex items-center justify-between px-4 md:px-12 py-4 md:py-5 border-b-2 border-divider">
         <div className="flex items-center gap-3">
           <div className="w-9 h-9 bg-ink flex items-center justify-center shrink-0">
-            <span className="text-bg font-heading font-extrabold md:text-lg text-sm">RH</span>
+            <span className="text-bg font-heading font-extrabold md:text-lg text-sm">TP</span>
           </div>
           <div className="leading-tight">
             <div className="font-heading font-extrabold text-[12px] md:text-[15px] tracking-wide">
-              REVIVING HUMANITY
+              TRIAL PATH
             </div>
-            <div className="text-[10px] md:text-[11px] tracking-widest text-ink2-700">FOUNDATION</div>
+            <div className="text-[10px] md:text-[11px] tracking-widest text-ink2-700">CLINICAL TRIALS</div>
           </div>
         </div>
 

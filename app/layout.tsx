@@ -9,8 +9,8 @@ const archivo = Archivo({
 });
 
 export const metadata: Metadata = {
-  title: "Weight Loss Trials — Reviving Humanity Foundation",
-  description: "Join Reviving Humanity Foundation's weight loss trials.",
+  title: "Weight Loss Trials — Trial Path",
+  description: "Join Trial Path's weight loss trials.",
 };
 
 export default function RootLayout({
